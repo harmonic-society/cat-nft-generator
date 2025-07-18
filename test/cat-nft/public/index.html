@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat NFT Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .generator-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .trait-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .preview-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #catPreview {
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+        }
+
+        .metadata {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .metadata h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .metadata-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .metadata-label {
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .metadata-value {
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .generator-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐱 Cat NFT Generator</h1>
+        
+        <div class="generator-section">
+            <div class="controls">
+                <div class="trait-group">
+                    <label for="bodyColor">体の色:</label>
+                    <select id="bodyColor">
+                        <option value="">ランダム</option>
+                        <option value="orange">オレンジ</option>
+                        <option value="gray">グレー</option>
+                        <option value="black">ブラック</option>
+                        <option value="white">ホワイト</option>
+                        <option value="brown">ブラウン</option>
+                    </select>
+                </div>
+
+                <div class="trait-group">
+                    <label for="eyeColor">目の色:</label>
+                    <select id="eyeColor">
+                        <option value="">ランダム</option>
+                        <option value="blue">ブルー</option>
+                        <option value="green">グリーン</option>
+                        <option value="yellow">イエロー</option>
+                        <option value="amber">アンバー</option>
+                    </select>
+                </div>
+
+                <div class="trait-group">
+                    <label for="accessory">アクセサリー:</label>
+                    <select id="accessory">
+                        <option value="">ランダム</option>
+                        <option value="none">なし</option>
+                        <option value="bow">リボン</option>
+                        <option value="collar">首輪</option>
+                        <option value="hat">帽子</option>
+                        <option value="glasses">メガネ</option>
+                    </select>
+                </div>
+
+                <div class="trait-group">
+                    <label for="background">背景:</label>
+                    <select id="background">
+                        <option value="">ランダム</option>
+                        <option value="blue">ブルー</option>
+                        <option value="pink">ピンク</option>
+                        <option value="purple">パープル</option>
+                        <option value="green">グリーン</option>
+                        <option value="yellow">イエロー</option>
+                    </select>
+                </div>
+
+                <div class="buttons">
+                    <button onclick="generateNFT()">NFT生成</button>
+                    <button onclick="downloadImage()" id="downloadBtn" disabled>画像ダウンロード</button>
+                    <button onclick="downloadMetadata()" id="downloadMetaBtn" disabled>メタデータダウンロード</button>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <img id="catPreview" src="" alt="Cat NFT Preview" style="display: none;">
+                <div id="loadingText" class="loading" style="display: none;">生成中...</div>
+            </div>
+        </div>
+
+        <div class="metadata" id="metadataSection" style="display: none;">
+            <h3>NFT メタデータ</h3>
+            <div id="metadataContent" class="metadata-grid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
